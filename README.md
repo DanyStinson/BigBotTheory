@@ -1,2 +1,4 @@
 # BigBotTheory - Hands On Lab
-Introduction to creating your first bot with Microsoft Botframework
+### Create your first bot with Microsoft Botframework
+---
+![](https://github.com/DanyStinson/BigBotTheory/blob/master/BigBotTheory.PNG)
