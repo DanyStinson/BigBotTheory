@@ -13,7 +13,7 @@ This is the route you are looking for:
 **“%USERPROFILE%\Documents\Visual Studio 2015\Templates\ProjectTemplates\Visual C#\”**
 After doing this you should be able to create a new **Bot Application** project 
 #### Bot Framework Channel Emulator
-Before we upload our Bot to the Cloud we should do some previous testing. For this, we have the  [Bot Framework Channel Emulator](https://download.botframework.com/bf-v3/builder/vstemplate/Bot%20Application.zip). Download the emulator and install it in your computer. Later on I will guide you on how to use it.
+Before we upload our Bot to the Cloud we should do some previous testing. For this, we have the  [Bot Framework Channel Emulator](https://docs.botframework.com/en-us/tools/bot-framework-emulator/). Download the emulator and install it in your computer. Later on I will guide you on how to use it.
 
 **Once you have completed downloading and installing this three prerequisites you are ready to begin!**
 **Enjoy!**
