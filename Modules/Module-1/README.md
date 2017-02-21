@@ -9,11 +9,14 @@ The first step, as you will imagine is to **Open Visual Studio**.
 After that, create a new project, select the Bot Application template. Assign your project a name and give life to your first bot! 
 
 **Note**: Check the "Add to Source Control" option, it will help with you with version control and you will have a repository to work with.
+
 ![](../../images/mod1_1.png)
 ## Project structure
 
 Lets have a look a the projects structure to understand how our bot works.
+
 ![](../../images/mod1_2.png)
+
 We have: 
 - A series of **properties** and **references** as we have in all our Visual Studio projects. 
 - An **App_Start** folder that contains **WebApiConfig.cs** which is in charge of the routes of our Bot and Json options.
