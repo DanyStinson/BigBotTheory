@@ -59,3 +59,35 @@ The method receives an **Activity** object (also called **activity**) that is us
 If the activity that the bot receives is of type message, it will get its length, it will generate a response with the **CreateReply ()** method and it will be sent back to the user. Then you will wait for the user to send you a message again.
 
 If the activity is not message type, it will be redirected to another function of the controller that is in charge of actions that we can predefine for the different types of activities sent to the bot.
+
+
+### Run the bot application
+
+So... You have already seen above how a bot is structured and how it responds to the messages that it receives from the user. So let's get our bot up and running!
+
+**Step 1**: Run the Bot Framework project. A browser window will open that will display the default.htm.
+
+![](../../images/mod1_4.png)
+
+**Step 2**: Open the Bot Framework Emulator and enter in the address bar:
+```sh
+Http: // localhost: {Port on which you are running} / api / messages
+```
+
+At the moment you won´t have to enter anything in the Microsoft App ID or Microsoft App Password fields because we have not registered our bot in the Microsoft Bot Framework.
+
+![](../../images/mod1_5.png)
+ 
+Once connected, the message "POST 200 [conversationUpdate]" will appear on the right screen of the application. This means that the bot is waiting for you to send a message. 
+
+Go ahead, say hello!
+
+![](../../images/mod1_6.png)
+ 
+Congratulations, you have already created your first bot!
+
+As you can see is a fairly simple process, but will be more complex as we add new features to make it smarter.
+
+I hope you have understood the basics in this introduction to this new world of bots!
+
+Go ahead to [Module 2](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-2) to learn about bot dialogs.
