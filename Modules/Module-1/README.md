@@ -9,11 +9,11 @@ The first step, as you will imagine is to **Open Visual Studio**.
 After that, create a new project, select the Bot Application template. Assign your project a name and give life to your first bot! 
 
 **Note**: Check the "Add to Source Control" option, it will help with you with version control and you will have a repository to work with.
-
+![](../images/mod1_1.png)
 ## Project structure
 
 Lets have a look a the projects structure to understand how our bot works.
-
+![](../images/mod1_2.png)
 We have: 
 - A series of **properties** and **references** as we have in all our Visual Studio projects. 
 - An **App_Start** folder that contains **WebApiConfig.cs** which is in charge of the routes of our Bot and Json options.
@@ -27,7 +27,25 @@ For the moment that is all our bot needs to work.
 Right now MessageController.cs is our principal class in our new project. Here is where the magic begins, specifically with the following method:
 
 ```sh
-public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
+ public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
+        {
+            if (activity.Type == ActivityTypes.Message)
+            {
+                ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                // calculate something for us to return
+                int length = (activity.Text ?? string.Empty).Length;
+
+                // return our reply to the user
+                Activity reply = activity.CreateReply($"You sent {activity.Text} which was {length} characters");
+                await connector.Conversations.ReplyToActivityAsync(reply);
+            }
+            else
+            {
+                HandleSystemMessage(activity);
+            }
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            return response;
+        }
 ``` 
 
 
