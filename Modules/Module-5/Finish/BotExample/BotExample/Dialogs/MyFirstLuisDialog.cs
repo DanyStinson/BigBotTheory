@@ -14,7 +14,8 @@ using Newtonsoft.Json;
 using System.Globalization;
 using Microsoft.ProjectOxford.Emotion;
 using Microsoft.ProjectOxford.Emotion.Contract;
-
+using Microsoft.ProjectOxford.Vision;
+using Microsoft.ProjectOxford.Vision.Contract;
 
 namespace BotExample.Dialogs
 {
@@ -211,13 +212,91 @@ namespace BotExample.Dialogs
                 string topEmotionKey = topEmotion.Key;
                 float topEmotionScore = topEmotion.Value;
 
+
                 reply.Text = "I found a face! I am " + (int)(topEmotionScore * 100) + "% sure the person seems " + topEmotionKey;
+                
             }
 
             await context.PostAsync(reply);
             context.Wait(MessageReceived);
         }
 
+        [LuisIntent("DescribePicture")]
+        public async Task Description(IDialogContext context, LuisResult result)
+        {
+            await context.PostAsync($"Send me a picture please");
+            context.Wait(DescribeImage);
+        }
+
+        public async Task DescribeImage(IDialogContext context, IAwaitable<IMessageActivity> argument)
+        {
+            const string visionApiKey = "292eb1a043b6420fb56b2026f4cacd2a";
+
+            //Vision SDK classes
+            VisionServiceClient visionClient = new VisionServiceClient(visionApiKey);
+            VisualFeature[] visualFeatures = new VisualFeature[] {
+                                        VisualFeature.Adult, //recognize adult content
+                                        VisualFeature.Categories, //recognize image features
+                                        VisualFeature.Description //generate image caption
+                                        };
+            AnalysisResult analysisResult = null;
+
+
+            
+            var activity = await argument;
+            var received = activity.Text;
+
+            
+
+            if (activity.Attachments?.Any() == true)
+            {
+                var photoUrl = activity.Attachments[0].ContentUrl;
+                var client = new HttpClient();
+                var photoStream = await client.GetStreamAsync(photoUrl);
+
+                try
+                {
+                    analysisResult = await visionClient.AnalyzeImageAsync(photoStream, visualFeatures);
+                }
+
+                catch (Exception e)
+                {
+                    analysisResult = null;
+                }
+            }
+            else
+            {
+                try
+                {
+                    analysisResult = await visionClient.AnalyzeImageAsync(activity.Text, visualFeatures);
+                }
+
+                catch (Exception e)
+                {
+                    analysisResult = null;
+                }
+            }
+
+            var reply = context.MakeMessage();
+            reply.Text = "Did you upload an image? I'm more of a visual person. " + "Try sending me an image or an image url";
+
+            if (analysisResult != null)
+            {
+
+                if (analysisResult.Adult.IsAdultContent)
+                {
+                    reply.Text = "I don´t like adult content images";
+                }
+                else
+                {
+                    string imageCaption = analysisResult.Description.Captions[0].Text;
+                    reply.Text = "I think it's " + imageCaption;
+                }
+            }
+
+            await context.PostAsync(reply);
+            context.Wait(MessageReceived);
+        }
         [LuisIntent("")]
         public async Task None(IDialogContext context, LuisResult result)
         {
