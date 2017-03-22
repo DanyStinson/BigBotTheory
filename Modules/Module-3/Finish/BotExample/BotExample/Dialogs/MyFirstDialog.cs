@@ -9,108 +9,131 @@ using Microsoft.Bot.Connector;
 namespace BotExample.Dialogs
 {
     [Serializable]
+    public class Character
+    {
+        public Character() { }
+
+        public Character(string name, string profession, string information, string imageurl) {
+            Name = name;
+            Profession = profession;
+            Information = information;
+            Imageurl = imageurl;
+        }
+        public string Name { get; set; }
+        public string Profession { get; set; }
+        public string Information { get; set; }
+        public string Imageurl { get; set; }
+    }
+
+    [Serializable]
     public class MyFirstDialog : IDialog<object>
     {
+        private Dictionary<string, string> plans = new Dictionary<string, string>()
+        {
+            { "monday", "get a Thai takeout!" },
+            { "tuesday", "have a cheeseburger at the Cheesecake Factory!" },
+            { "wednesday", "play Halo with your friends!" },
+            { "thursday", "have a nice slice of pizza!" },
+            { "friday", "get a chinese takeaway!" },
+            { "saturday", "do some of your laundry!" },
+            { "sunday", "relax at home and do some physics!" }
+        };
+
+        private Dictionary<string, Character> characters = new Dictionary<string, Character>()
+        {
+            {"leonard", new Character("Leonard Hofstadter", "Experimental Physicist" ,"Leonard is my friend" ,"http://vignette3.wikia.nocookie.net/thebigbangtheory/images/b/bf/250px-Leonard.jpg/revision/latest?cb=20120917154638&path-prefix=es")},
+            {"penny", new Character("Penny", "Aspiring Actress" ,"Leonard is my friend" ,"https://upload.wikimedia.org/wikipedia/en/4/41/Penny_bigbangtheory.jpg")},
+            {"raj", new Character("Rajesh Koothrappali", "Particle Astrophysicist" ,"Leonard is my friend" ,"http://vignette2.wikia.nocookie.net/bigbangtheory/images/9/97/Raj.jpg/revision/20110809180135")},
+            {"howard", new Character("Howard Wolowitz", "Aerospace Engineer" ,"Leonard is my friend" ,"http://vignette2.wikia.nocookie.net/bigbangtheory/images/6/6a/Howardwolowitz.jpg/revision/latest/top-crop/width/240/height/240?cb=20100425200930")}
+        };
+
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync("Welcome, I´m Sheldon Bot");
-            OptionsMenuAsync(context);
+            context.Wait(MessageReceivedAsync);
         }
 
-        private void OptionsMenuAsync(IDialogContext context)
+        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
-            var choices = new[] {"My Friends", "Tonight´s Plan" };
-            PromptDialog.Choice(context, ChoiceSelected, choices,
-            "What do you want me to talk to you about?","Please select a valid option");
+            ShowOptions(context);
         }
 
-        private async Task ChoiceSelected(IDialogContext context, IAwaitable<string> argument)
+        private void ShowOptions(IDialogContext context)
+        {
+            var choices = new[] { "My Friends", "Tonight´s Plan" };
+            PromptDialog.Choice(context, ChoiceSelectedAsync, choices,
+                "What do you want me to talk to you about?", "Please select a valid option");
+        }
+
+        private async Task ChoiceSelectedAsync(IDialogContext context, IAwaitable<string> argument)
         {
             var choice = await argument;
             switch (choice)
             {
                 case "My Friends":
                     var choices = new[] { "Leonard", "Penny", "Howard", "Raj" };
-                    PromptDialog.Choice(context, FriendSelected, choices, "Who do you want to know about?", "Please select a valid option");
+                    PromptDialog.Choice(context, FriendSelectedAsync, choices, "Who do you want to know about?", "Please select a valid option");
                     break;
-                case "Tonight´s Dinner":
-                    PromptDialog.Text(context, ReturnDinner, "What day of the week is today?", "Please enter the name of the day", 3);
+                case "Tonight´s Plan":
+                    PromptDialog.Text(context, ReturnPlanAsync, "What day of the week is today?", "Please enter the name of the day", 3);
                     break;
                 default:
-                    OptionsMenuAsync(context);
+                    ShowOptions(context);
                     break;
             }
         }
 
-        public void createHeroCard(IMessageActivity reply, string name)
+        public Attachment CreateCharacterCard(IDialogContext context, Character character)
         {
-            reply.Attachments = new List<Attachment>();
-            HeroCard hc = new HeroCard();
-            List<CardImage> images = new List<CardImage>();
-            CardImage ci = new CardImage();
-
-            if (name == "Leonard")
+            HeroCard hc = new HeroCard()
             {
-                hc.Title = "Leonard Hofstadter";
-                hc.Subtitle = "Experimental Physicist";
-                ci.Url = "http://vignette3.wikia.nocookie.net/thebigbangtheory/images/b/bf/250px-Leonard.jpg/revision/latest?cb=20120917154638&path-prefix=es";
-            }
-            else if (name == "Penny")
-            {
-                hc.Title = "Penny";
-                hc.Subtitle = "Aspiring Actress";
-                ci.Url = "https://upload.wikimedia.org/wikipedia/en/4/41/Penny_bigbangtheory.jpg";
-            }
+                Title = character.Name,
+                Subtitle = character.Profession,
+                Images = new List<CardImage>()
+                {
+                    new CardImage()
+                    {
+                        Url = character.Imageurl
+                    }
+                }
+            };
 
-            else if (name == "Raj")
-            {
-                hc.Title = "Rajesh Koothrappali";
-                hc.Subtitle = "Particle Astrophysicist";
-                ci.Url = "http://vignette2.wikia.nocookie.net/bigbangtheory/images/9/97/Raj.jpg/revision/20110809180135";
-            }
-
-            else if (name == "Howard")
-            {
-                hc.Title = "Howard Wolowitz";
-                hc.Subtitle = "Aerospace Engineer";
-                ci.Url = "http://vignette2.wikia.nocookie.net/bigbangtheory/images/6/6a/Howardwolowitz.jpg/revision/latest/top-crop/width/240/height/240?cb=20100425200930";
-            }
-
-            images.Add(ci);
-            hc.Images = images;
-            reply.Attachments.Add(hc.ToAttachment());
-
+            return hc.ToAttachment();
         }
         
-        private async Task FriendSelected(IDialogContext context, IAwaitable<string> argument)
+        private async Task FriendSelectedAsync(IDialogContext context, IAwaitable<string> argument)
         {
             var choice = await argument;
-            var reply = context.MakeMessage();
-            createHeroCard(reply, choice);
-            await context.PostAsync(reply);
-            context.Done("");
+            if (characters.ContainsKey(choice.ToLower()))
+            {
+                var reply = context.MakeMessage();
+                reply.Attachments = new List<Attachment>
+                {
+                   CreateCharacterCard(context, characters[choice.ToLower()])
+                };
+                await context.PostAsync(reply);
+            }
+            else
+            {
+                await context.PostAsync($"Sorry, {choice} isn´t in my friends list");
+            }
+
+            ShowOptions(context);
         }
 
-        private async Task ReturnDinner(IDialogContext context, IAwaitable<string> argument)
+        private async Task ReturnPlanAsync(IDialogContext context, IAwaitable<string> argument)
         {
             var choice = await argument;
-            var reply = context.MakeMessage();
-            reply.Text = $"If today is {choice} you should ";
+            if (plans.ContainsKey(choice))
+            {
+                await context.PostAsync($"If today is {choice} you should {plans[choice.ToLower()]}");
+            }
+            else
+            {
+                await context.PostAsync($"Sorry, {choice} isn´t a day of my week");
+            }
 
-            if (choice == "Monday") {reply.Text += "get a Thai takeout!";}
-            else if (choice == "Tuesday") { reply.Text += "have a cheeseburger at the Cheesecake Factory!"; }
-            else if (choice == "Wednesday") { reply.Text += "play Halo with your friends!"; }
-            else if (choice == "Thursday") { reply.Text += "have a nice slice of pizza!"; }
-            else if (choice == "Friday") { reply.Text += "get a chinese takeaway!"; }
-            else if (choice == "Saturday") { reply.Text += "do some of your laundry!"; }
-            else if (choice == "Sunday") { reply.Text += "relax at home and do some physics!"; }
-            else { reply.Text = "That isn´t a day of the week!!"; }
-
-            await context.PostAsync(reply);
-            context.Done("");
-
+            ShowOptions(context);
         }
-
-
     }
 }

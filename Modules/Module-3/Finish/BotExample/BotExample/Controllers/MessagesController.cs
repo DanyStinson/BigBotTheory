@@ -23,7 +23,7 @@ namespace BotExample
         {
             if (activity.Type == ActivityTypes.Message)
             {
-                await Conversation.SendAsync(activity, () => new MyFirstDialog());
+                await Conversation.SendAsync(activity, () => new MyFirstLuisDialog());
             }
             else
             {
