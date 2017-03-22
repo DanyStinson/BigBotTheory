@@ -53,16 +53,19 @@ namespace BotExample.Dialogs
                    CreateCharacterCard(context, characters[friend.ToLower()])
                 };
                     await context.PostAsync(reply);
+                    context.Wait(MessageReceived);
                 }
                 else
                 {
                     await context.PostAsync($"Sorry, {friend} isn´t in my friends list");
                     await context.PostAsync(CreateCharactersCarousel(context));
+                    context.Wait(MessageReceived);
                 }
             }
             else {
                 await context.PostAsync($"Here are some of my friends");
                 await context.PostAsync(CreateCharactersCarousel(context));
+                context.Wait(MessageReceived);
             }
 
 
@@ -97,6 +100,33 @@ namespace BotExample.Dialogs
 
         [LuisIntent("Plans")]
         public async Task Plans(IDialogContext context, LuisResult result) {
+            string time = "";
+            EntityRecommendation dateEntRec;
+
+            if (result.TryFindEntity("builtin.datetime.time", out dateEntRec))
+            {
+                time = dateEntRec.Entity;
+                await context.PostAsync($"Plan for {time}");
+                context.Done("");
+            }
+
+            else if(result.TryFindEntity("builtin.datetime.date", out dateEntRec))
+            {
+                time = dateEntRec.Entity;
+                await context.PostAsync($"Plan for {time}");
+                await context.PostAsync(result.Entities.GetType().ToString());
+                
+                context.Done("");
+            }
+
+            
+            else
+            {
+                await context.PostAsync($"Nada");
+                context.Done("");
+            }
+            
+
         }
     
        [LuisIntent("")]
