@@ -12,6 +12,9 @@ using System.Web.Configuration;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Globalization;
+using Microsoft.ProjectOxford.Emotion;
+using Microsoft.ProjectOxford.Emotion.Contract;
+
 
 namespace BotExample.Dialogs
 {
@@ -40,7 +43,7 @@ namespace BotExample.Dialogs
         public async Task Welcome(IDialogContext context, LuisResult result)
         {
             await context.PostAsync($"Hi, I´m SheldonBot");
-            await context.PostAsync("I can talk about my friends or weekly night plans, what would you like to know about?");
+            await context.PostAsync("I can talk about my friends, weekly night plans, recognize pictures or emotions, what would you like to know about?");
             context.Wait(MessageReceived);
         }
 
@@ -115,32 +118,115 @@ namespace BotExample.Dialogs
             {
                 datetime = dateEntRec.Resolution["time"];
                 day = DateTime.Parse(datetime.Remove(10, 3));
-                await context.PostAsync($"On a {day.DayOfWeek.ToString().ToLower()} you should {plans[day.DayOfWeek.ToString().ToLower()]} ");
-                context.Done("");
             }
 
             else if(result.TryFindEntity("builtin.datetime.date", out dateEntRec))
             {
                 datetime = dateEntRec.Resolution["date"];
                 day = DateTime.Parse(datetime);
-                await context.PostAsync($"On a {day.DayOfWeek.ToString().ToLower()} you should {plans[day.DayOfWeek.ToString().ToLower()]} "); 
-                context.Done("");
             }
 
             else
             {
-                await context.PostAsync($"Nada");
+                await context.PostAsync($"Sorry I can´t find the day you are looking to have a plan");
                 context.Done("");
             }
 
+            await context.PostAsync($"On a {day.DayOfWeek.ToString().ToLower()} you should {plans[day.DayOfWeek.ToString().ToLower()]} ");
+            context.Done("");
+
         }
-    
-       [LuisIntent("")]
+
+        [LuisIntent("RecognizeEmotion")]
+        public async Task Emotion(IDialogContext context, LuisResult result)
+        {
+            await context.PostAsync($"Send me a picture please");
+            context.Wait(AnalyzeEmotion);
+        }
+
+        public async Task AnalyzeEmotion(IDialogContext context, IAwaitable<IMessageActivity> argument) {
+
+            const string emotionApiKey = "13fae55675884e98b4b9f013d2340c7b";
+            var activity = await argument;
+            var received = activity.Text;
+            
+            //Emotion SDK objects that take care of the hard work
+            EmotionServiceClient emotionServiceClient = new EmotionServiceClient(emotionApiKey);
+            Emotion[] emotionResult = null;
+
+            if (activity.Attachments?.Any() == true)
+            {
+                var photoUrl = activity.Attachments[0].ContentUrl;
+                var client = new HttpClient();
+                var photoStream = await client.GetStreamAsync(photoUrl);
+                
+                try
+                {
+                    emotionResult = await emotionServiceClient.RecognizeAsync(photoStream);
+                }
+
+                catch (Exception e)
+                {
+                    emotionResult = null;
+                }
+            }
+            else
+            {
+                try
+                {
+                    emotionResult = await emotionServiceClient.RecognizeAsync(activity.Text);
+                }
+
+                catch (Exception e)
+                {
+                    emotionResult = null;
+                }
+            }
+
+            var reply = context.MakeMessage();
+            reply.Text = "Could not find a face, or something went wrong. " + "Try sending me a photo with a face";
+
+            if (emotionResult != null)
+            {
+                Microsoft.ProjectOxford.Common.Contract.EmotionScores emotionScores = new Microsoft.ProjectOxford.Common.Contract.EmotionScores();
+                emotionScores = emotionResult[0].Scores;
+
+                //Retrieve list of emotions for first face detected and sort by emotion score (desc)
+                IEnumerable<KeyValuePair<string, float>> emotionList = new Dictionary<string, float>()
+                {
+                    { "angry", emotionScores.Anger},
+                    { "contemptuous", emotionScores.Contempt },
+                    { "disgusted", emotionScores.Disgust },
+                    { "frightened", emotionScores.Fear },
+                    { "happy", emotionScores.Happiness},
+                    { "neutral", emotionScores.Neutral},
+                    { "sad", emotionScores.Sadness },
+                    { "surprised", emotionScores.Surprise}
+                }
+                .OrderByDescending(kv => kv.Value)
+                .ThenBy(kv => kv.Key)
+                .ToList();
+
+                KeyValuePair<string, float> topEmotion = emotionList.ElementAt(0);
+                string topEmotionKey = topEmotion.Key;
+                float topEmotionScore = topEmotion.Value;
+
+                reply.Text = "I found a face! I am " + (int)(topEmotionScore * 100) + "% sure the person seems " + topEmotionKey;
+            }
+
+            await context.PostAsync(reply);
+            context.Wait(MessageReceived);
+        }
+
+        [LuisIntent("")]
         public async Task None(IDialogContext context, LuisResult result)
         {
             await context.PostAsync($"Sorry, I did not understand '{result.Query}'");
             context.Wait(MessageReceived);
         }
+
+
+
 
     }
 }
