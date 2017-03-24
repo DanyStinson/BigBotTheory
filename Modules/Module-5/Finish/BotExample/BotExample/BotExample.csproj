@@ -145,12 +145,6 @@
   <ItemGroup>
     <Content Include="default.htm" />
     <Content Include="Global.asax" />
-    <Content Include="Images\Amy.jpg" />
-    <Content Include="Images\Bernadette.png" />
-    <Content Include="Images\howard.jpg" />
-    <Content Include="Images\Leonard.jpg" />
-    <Content Include="Images\Penny.jpg" />
-    <Content Include="Images\Raj.jpg" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -160,10 +154,17 @@
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\MyFirstDialog.cs" />
     <Compile Include="Dialogs\MyFirstLuisDialog.cs" />
+    <Compile Include="Extensions\CharacterExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Model\Character.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Model\BigBangTheoryClient.cs" />
+    <Compile Include="Services\EmotionService.cs" />
+    <Compile Include="Services\HttpService.cs" />
+    <Compile Include="Services\VisionService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

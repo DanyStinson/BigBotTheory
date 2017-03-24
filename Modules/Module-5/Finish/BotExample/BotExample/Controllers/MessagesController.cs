@@ -1,14 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿using BotExample.Dialogs;
+using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.Luis;
+using Microsoft.Bot.Connector;
+using System.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
-using Microsoft.Bot.Connector;
-using Newtonsoft.Json;
-using Microsoft.Bot.Builder.Dialogs;
-using BotExample.Dialogs;
 
 namespace BotExample
 {
@@ -23,7 +21,11 @@ namespace BotExample
         {
             if (activity.Type == ActivityTypes.Message)
             {
-                await Conversation.SendAsync(activity, () => new MyFirstLuisDialog());
+                var attributes = new LuisModelAttribute(
+                    ConfigurationManager.AppSettings["LUISModelID"], 
+                    ConfigurationManager.AppSettings["LUISSubscriptionKey"]);
+                var service = new LuisService(attributes);
+                await Conversation.SendAsync(activity, () => new MyFirstLuisDialog(service));
             }
             else
             {
