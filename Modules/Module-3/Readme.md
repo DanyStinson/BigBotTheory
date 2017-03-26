@@ -139,7 +139,7 @@ private void ShowOptions(IDialogContext context)
 ```
 What we do with __PromptDialog.Choice__ is display a series of predefined choices for the user to pick what he wants to do, and send the selected choice to another function to process. We must define a message to display for the prompt, and another message in case the user decides to ask for an option that isn&#39;t in the list of choices.
 
-More information and types of Prompts in the following link: https://docs.botframework.com/en-us/csharp/builder/sdkreference/d9/d03/class\_microsoft\_1\_1\_bot\_1\_1\_builder\_1\_1\_dialogs\_1\_1\_prompt\_dialog.html
+More information and types of Prompts in the following [link](https://docs.botframework.com/en-us/csharp/builder/sdkreference/d9/d03/class\_microsoft\_1\_1\_bot\_1\_1\_builder\_1\_1\_dialogs\_1\_1\_prompt\_dialog.html).
 
 >__Note__: As you can see we are recreating a conversation, we send a message, wait for the answer and process it to see what to reply next as we would do in real life conversations.
 
@@ -175,7 +175,7 @@ Go ahead and create a new Model folder in our folder and create the __Character.
 
 <div style="text-align:center" markdown="1">
 
-![](../../images/mod3_3.png)
+![](../../images/mod3_3_1.png)
 
 </div>
 
