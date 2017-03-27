@@ -141,9 +141,239 @@ Go to the __Publish App__ Section, select your __Programmatic Key__ as _endpoint
 
 ### __Congratulations, you have created your first LUIS app!__  
 
-## Adding LUIS DIalog to our bot
+## Adding LUIS Dialog to our bot
 
 Now you have your LUIS app working it`s time to bind it with our existing bot.
 
-Open the Visual Studio Solution and create a MyFirstLuisDialog.cs inside the Dialogs folder.
+Open the Visual Studio Solution and create a __MyFirstLuisDialog.cs__ inside the __Dialogs__ folder.
+
+![](../../images/mod4_1.png)
+
+Update:
+```
+public class MyFirstLuisDialog
+{
+       
+}
+```
+
+to:
+
+```
+public class MyFirstLuisDialog : LuisDialog<object>
+{
+   public MyFirstLuisDialog(LuisService service) : base(service) { }
+}
+```
+
+Next, we have to tell our bot the settings our LUIS endpoint so it can use it`s services.
+
+Go to the __Web.Release.config__ file, and add two new keys inside the AppSettings we created in Module 2. 
+
+```
+<add key="LUISModelID" value="Put your LUIS App ID here" xdt:Transform="SetAttributes" xdt:Locator="Match(key)" />
+<add key="LUISSubscriptionKey" value="Put your LUIS key here" xdt:Transform="SetAttributes" xdt:Locator="Match(key)" />
+``` 
+
+Now when a user writes a message to the bot, we want it to jump into our LUIS dialog, so go ahead and update the code in the __MessagesController.cs__ inside the __Controllers__ folder.
+
+
+```
+if (activity.Type == ActivityTypes.Message)
+            {
+                var attributes = new LuisModelAttribute(
+                    ConfigurationManager.AppSettings["LUISModelID"], 
+                    ConfigurationManager.AppSettings["LUISSubscriptionKey"]);
+                var service = new LuisService(attributes);
+                await Conversation.SendAsync(activity, () => new MyFirstLuisDialog(service));
+            }
+```
+
+__Extracting LUIS Entities__ 
+
+To extract an Entity we must first check if the requested Entity is found in the utterance and dump it into an EntityRecommendation variable. 
+
+```
+EntityRecommendation entRec;
+if (result.TryFindEntity("<<name of Luis Entity>>", out entRec))
+    {
+        // We found an Entity in the utterance
+        string entityvalue = entRec.Entity;
+    }
+```
+
+### __LUIS Welcome Intent__
+
+So, we have linked our LUIS app to our LUIS Dialog, but how do we tell our bot what do when LUIS reconizes an intention?
+
+Very easy, here is how we would do it for the __Welcome Intent__.
+
+Add the following lines to __MyFirstLuisDialog.cs__:
+
+```
+[LuisIntent("Welcome")]
+public async Task Welcome(IDialogContext context, LuisResult result)
+{
+    await context.PostAsync($"Hi, I'm SheldonBot");
+    await context.PostAsync("I can talk about my friends or weekly night plans, what would you like to know about?");
+    context.Wait(MessageReceived);
+}
+```
+Whenever our users write a message to our bot and LUIS recognizes it as a __Welcome__ intent it will perform the __Welcome__ function and present himself.
+
+Everytime LUIS identifies an intent it returns a __LuisResult__ variable containing all the data related to the operation.
+
+
+### __LUIS Friends Intent__
+
+Let´s start the friends conversation by adding a new LUIS intent inside our dialog. I have also included the BigBangTheoryClient client, as we are going to be working with the Characters Dictionary we used in Module 3.
+
+```
+[LuisIntent("Friends")]
+public async Task Friends(IDialogContext context, LuisResult result)
+{
+    var client = new BigBangTheoryClient();
+}
+```
+
+The bot is going to execute this function when LUIS detects we are asking about the bot`s friends. If you remember, we also created a Friend entity in case we are asking for information about a specific friend. So let´s find a Friend Entity by adding the following code after the client declaration.
+
+
+```
+// Did we get a friend name?
+EntityRecommendation friendEntRec;
+    if (result.TryFindEntity("Friend", out friendEntRec))
+        {
+            // We got a name
+            string friend = friendEntRec.Entity;
+            var character = client.GetCharacter(friend);
+            if (character != null)
+                {
+                    // We know the friend
+                    await context.PostAsync($"This is what I can tell you about {character.Name}");
+                    await context.PostAsync(character.ToMessage(context));
+                }
+            else
+                {
+                    // We don't know the friend
+                    await context.PostAsync($"Sorry, {friend} isn't in my friends list");
+                }
+        }
+    else
+    {
+        // We weren't provided with any friend name
+        await context.PostAsync($"You haven´t asked me about any specific friend");
+    }
+
+    context.Wait(MessageReceived);
+
+```
+
+For those who completed Module 3 what we do in this function will be familiar to them. If you haven`t done Module 3, what we do in this function is:
+- Search the friend received in our Friends Dictionary.
+- If the friend is found, we return a reply with a Hero Card attachment we created with an extension method for the Character class (You can see this in the Extensions folder of the project).
+- If the friend is not found we return a reply telling the user the friend isn´t in his list.
+- If we don´t detect any friend entity we inform the user
+- Finally we wait for the users next message with context.Wait(MessageReceived)
+
+### __Go ahead and ask your bot about his friends!__
+
+Let´s add a new feature to the Friends conversation. To let the user know the available friends of the bot, we are going to reply a carousel of character hero cards whenever we don`t indentify a Friend entity or we don´t find the friend in the dictionary.
+
+```
+        public IEnumerable<Character> GetAllCharacters()
+            => characters.Select(c => c.Value).ToList();
+```
+
+
+First let`s create a new extension method in our Character extension class. This method will return us a reply, which contains a carousel of the list of character we pass it.
+
+```
+        public static IMessageActivity ToMessage(this IEnumerable<Character> characters, IDialogContext context)
+        {
+            var reply = context.MakeMessage();
+            reply.AttachmentLayout = "carousel";
+            reply.Attachments = characters.Select(c => c.ToAttachment(context)).ToList();
+            return reply;
+        } 
+```
+Go back to the LuisDialog and update the friends conversation. 
+```
+[LuisIntent("Friends")]
+        public async Task Friends(IDialogContext context, LuisResult result)
+        {
+            var client = new BigBangTheoryClient();
+
+            // Did we get a friend name?
+            EntityRecommendation friendEntRec;
+            if (result.TryFindEntity("Friend", out friendEntRec))
+            {
+                // We got a name
+                string friend = friendEntRec.Entity;
+                var character = client.GetCharacter(friend);
+                if (character != null)
+                {
+                    // We know the friend
+                    await context.PostAsync($"This is what I can tell you about {character.Name}");
+                    await context.PostAsync(character.ToMessage(context));
+                }
+                else
+                {
+                    // We don't know the friend
+                    await context.PostAsync($"Sorry, {friend} isn't in my friends list");
+                    var characters = client.GetAllCharacters();
+                    await context.PostAsync(characters.ToMessage(context));
+                }
+            }
+            else
+            {
+                // We weren't provided with any friend name
+                await context.PostAsync($"Here are some of my friends");
+                var characters = client.GetAllCharacters();
+                await context.PostAsync(characters.ToMessage(context));
+            }
+
+            context.Wait(MessageReceived);
+        }
+```
+
+Now ours users will see all the bots friends in a nice way.
+
+### __Go ahead and try your progress!__
+
+### __LUIS Plans Intent__
+
+>__Resume:__ In this section we are going to develop the bots response when a user requests a plan.
+
+In this section our goal is to return the plan recommended for a day like we did in Module 3. The advantage of implementing LUIS is not having to ask the user for a day, instead we are going to extract the datetime prebuilt entity we assigned to this intent and parse it obtain the day of the week the user is referring to.
+
+Create the LUIS intent and corresponding function the same way we did with the other intents.
+
+```
+ [LuisIntent("Plans")]
+        public async Task Plans(IDialogContext context, LuisResult result)
+        {
+            
+        }
+```
+
+Datetime entities detect dates or time, so we have to distinguish the result obtained. Add the following code inside the Plans function to retrieve the Entity.
+
+```
+string datetime = string.Empty;
+EntityRecommendation dateEntRec;
+if (result.TryFindEntity("builtin.datetime.date", out dateEntRec))
+{
+    datetime = dateEntRec.Resolution["date"];
+}
+else if (result.TryFindEntity("builtin.datetime.time", out dateEntRec))
+{
+    datetime = dateEntRec.Resolution["time"];
+}
+```
+
+
+
+
+
 

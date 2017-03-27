@@ -42,6 +42,7 @@ namespace BotExample.Dialogs
                 if (character != null)
                 {
                     // We know the friend
+                    await context.PostAsync($"This is what I can tell you about {character.Name}");
                     await context.PostAsync(character.ToMessage(context));
                 }
                 else
