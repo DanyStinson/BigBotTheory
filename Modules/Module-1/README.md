@@ -88,4 +88,4 @@ Congratulations, you have already created your first bot!
 
 As you can see is a fairly simple process, but will be more complex as we add new features to make it smarter.
 
-Go ahead to [Module 2](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-2) to learn about bot dialogs.
+Go ahead to [Module 2](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-2) to learn how to publish your bot.
