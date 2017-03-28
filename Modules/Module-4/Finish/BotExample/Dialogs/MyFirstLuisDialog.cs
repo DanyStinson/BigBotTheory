@@ -1,4 +1,5 @@
-﻿using BotExample.Model;
+﻿using BotExample.Extensions;
+using BotExample.Model;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
@@ -57,6 +58,22 @@ namespace BotExample.Dialogs
             }
 
             context.Wait(MessageReceived);
+        }
+
+        [LuisIntent("Plans")]
+        public async Task Plans(IDialogContext context, LuisResult result)
+        {
+            string datetime = string.Empty;
+            EntityRecommendation dateEntRec;
+            if (result.TryFindEntity("builtin.datetime.date", out dateEntRec))
+            {
+                datetime = dateEntRec.Resolution["date"];
+            }
+
+            else if (result.TryFindEntity("builtin.datetime.time", out dateEntRec))
+            {
+                datetime = dateEntRec.Resolution["time"];
+            }
         }
 
     }

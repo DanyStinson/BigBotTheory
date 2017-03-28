@@ -1,7 +1,7 @@
-# Adding Intelligence to Our Bot
+# Adding Intelligence To Our Bot
 ## Welcome to Module 4
 
-If you have completed Module 1, Module 2 and Module 3, you should have a working bot, with a dialog that asks the user whether he wants to know about your bots friends or what plan does the bot recommend for a specific day of the week.
+If you have completed [Module 1](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-1), [Module 2](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-2) and [Module 3](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-3), you should have a working bot, with a dialog that asks the user whether he wants to know about your bot´s friends or what plan does it recommend for a specific day of the week.
 
 If you have followed the three modules you can still use the same bot, if you are starting from this module, you can download the solution I have left in the __Start__ folder of this module.
 >__Note:__ If you download the Start folder remember to populate the dictionaries located in the __BigBangTheoryClient.cs__ file inside the __Model__ folder.
@@ -15,9 +15,9 @@ Here is a small resume of what this module is going to cover:
 
 ## Understanding LUIS
 
-Up to now we have created a bot that displays options for the user to pick and process the selection to return an answer. Okay, that’s cool, but kind of traditional. 
+Up to now we have created a bot that displays options for the user to pick and process the selection to return an answer. Okay, that’s cool, but kind of traditional. Let´s admit it, it can get boring following always the same dialog routine. 
 
-Let´s admit it, it can get boring following always the same dialog routine. Wouldn`t it be better to ask the bot in natural language what we want from it, __like we would do in real life__? 
+Wouldn`t it be better to ask the bot in natural language what we want from it, __just like we would do in real life__? 
 
 That would be awesome, but we would have to parse all the different ways of asking for a specific service from the bot. Let me show you an example:
 
@@ -43,7 +43,7 @@ Go to the LUIS web page and create a new account using your Microsoft account.
 LUIS API needs an __endpoint key__. Go to “My Keys” Section and add a new Key, you can use your __programmatic key__ for this lab.
 
 ![](../../images/luis2.png)
->__Note:__ //TODO
+
 
 Now you have an __endpoint key__ you can create your first LUIS app in the __My Apps__ Section.
 
@@ -57,13 +57,21 @@ If everyhing has gone right, this is your app dashboard you should be seeing rig
 
 We`ve created an app, lets see how LUIS works.
 
-As I explained to you before, LUIS is going to recognize the users request intention. If we look at our current bot, we could extract three basic intentions:
-
-- __Welcome:__ It´s always nice to say hello to our bot!
-- __Friends:__ We want to know information about the bots friends
-- __Plans:__ We want the bot to recommend us a plan
+As I explained to you before, LUIS is going to recognize the users request intention. If we look at our current bot, we could extract four basic intentions:
+- __None:__ In case LUIS doesn´t detect any intention.
+- __Welcome:__ It´s always nice to say hello to our bot!.
+- __Friends:__ We want to know information about the bots friends.
+- __Plans:__ We want the bot to recommend us a plan.
 
 When we want LUIS to recognize an intention we add a new Intent.
+### __None Intent__
+
+As you can see, when you create your LUIS app, the None intention already comes prebuilt, so we don`t have to worry about this part.
+
+![](../../images/luis13.png)
+
+Whenever LUIS doesn´t recognize any of the intentions we have are going to define (Welcome, Friends or Plans), it will assign it to the None Intent. 
+
 ### __Welcome Intent__
 
 Go to the intents Section and add a new “Welcome” intent.
@@ -80,7 +88,7 @@ Once you typed in a few utterances press __Save__. Now our bot has utterances ex
 
 Before we create the __Friends Intent__ I want to explain you something.
 
-When we ask the bot about his friends it will recognize the intention. But wouldn´t it be nice for our bot to know which friend we are referring to also? 
+When we ask our bot about his friends it will recognize the intention. But wouldn´t it be nice for it to know which friend we are referring to also? 
 
 
 Here is where __LUIS Entities__ come in. 
@@ -101,7 +109,7 @@ Go to the Entities Section and add a new Custom Entity.
 
 Once created lets go back to our Intents Section, create a new __Friends Intent__ and add a couple of utterances.
 
-When you have populated a bit your utterances, place your mouse over your Friends entities (in the utterance) and assign the entity to the selected word (or words). When you finish remember to __Save__ your utterances. Once we train our bot, it will be able to recognize the entities itself!!
+When you have populated a bit your utterances, place your mouse over your Friends entities (in the utterance) and assign the entity to the selected word (or words). When you finish, remember to __Save__ your utterances. Once we train our bot, it will be able to recognize the entities itself!!
 
 ![](../../images/luis8.png)
 
@@ -111,7 +119,7 @@ When you have populated a bit your utterances, place your mouse over your Friend
 
  LUIS comes with a series of __Pre-Built Entities__ such as __Email, Geography, Money, Numbers, Datetime, Temperature and many more!__
 
-In this case we are going to use the __DateTime Entity__ so our bot knows what day the user wants the plan recommendation.
+For this intent we are going to use the __DateTime Entity__, so our bot knows what day the user wants the plan recommendation.
 
 Go to the __Entities__ Section and create the datetime prebuilt entity.
 
@@ -149,6 +157,10 @@ Open the Visual Studio Solution and create a __MyFirstLuisDialog.cs__ inside the
 
 ![](../../images/mod4_1.png)
 
+### __LuisDialog implementation__
+
+In [Module 3](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-3) we learned used the __IDialog__ implementation to encapsulate our dialog. In this case LUIS has its own dialog, __LuisDialog__.
+
 Update:
 ```
 public class MyFirstLuisDialog
@@ -160,15 +172,18 @@ public class MyFirstLuisDialog
 to:
 
 ```
+[Serializable]
 public class MyFirstLuisDialog : LuisDialog<object>
 {
    public MyFirstLuisDialog(LuisService service) : base(service) { }
 }
 ```
 
-Next, we have to tell our bot the settings our LUIS endpoint so it can use it`s services.
+### __Setting up LUIS keys__
 
-Go to the __Web.Release.config__ file, and add two new keys inside the AppSettings we created in Module 2. 
+Next, we have to tell our bot the settings of our LUIS endpoint to use the service.
+
+Go to the __Web.Release.config__ file, and add two new keys inside the AppSettings we created in [Module 2](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-2). 
 
 ```
 <add key="LUISModelID" value="Put your LUIS App ID here" xdt:Transform="SetAttributes" xdt:Locator="Match(key)" />
@@ -189,24 +204,41 @@ if (activity.Type == ActivityTypes.Message)
             }
 ```
 
-__Extracting LUIS Entities__ 
 
-To extract an Entity we must first check if the requested Entity is found in the utterance and dump it into an EntityRecommendation variable. 
+### __LUIS Intents__
+So, we have linked our LUIS app to our LUIS Dialog, but how do we tell our bot __what to do__ when LUIS reconizes an intention?
+
+Very easy, just add the following code for each intent you added to your LUIS service:
+
+```
+[LuisIntent("<< insert name of your intent >>")]
+```
+and under it, the function you want to execute:
+```
+public async Task HelloWorldAsync (IDialogContext context, LuisResult result)
+{
+    await context.PostAsync($"Hello World");
+    context.Wait(MessageReceived);
+}
+```
+Everytime LUIS identifies an intent it returns a __LuisResult__ variable containing all the data related to the intention.
+
+### __Extracting LUIS Entities__ 
+
+To extract an __Entity__ we must first check if the requested Entity is found in the utterance and dump it into an __EntityRecommendation__ variable. 
 
 ```
 EntityRecommendation entRec;
 if (result.TryFindEntity("<<name of Luis Entity>>", out entRec))
     {
         // We found an Entity in the utterance
-        string entityvalue = entRec.Entity;
+        string entityvaluevar = entRec.Entity;
     }
 ```
 
 ### __LUIS Welcome Intent__
 
-So, we have linked our LUIS app to our LUIS Dialog, but how do we tell our bot what do when LUIS reconizes an intention?
-
-Very easy, here is how we would do it for the __Welcome Intent__.
+Now we know the basics of LUIS, we can define what our bot should do everytime it detects someone is saying "Hello" or something similar to it.
 
 Add the following lines to __MyFirstLuisDialog.cs__:
 
@@ -215,14 +247,35 @@ Add the following lines to __MyFirstLuisDialog.cs__:
 public async Task Welcome(IDialogContext context, LuisResult result)
 {
     await context.PostAsync($"Hi, I'm SheldonBot");
-    await context.PostAsync("I can talk about my friends or weekly night plans, what would you like to know about?");
+    await context.PostAsync("I can talk about my friends or weekly night plans, what would you like to know?");
     context.Wait(MessageReceived);
 }
 ```
-Whenever our users write a message to our bot and LUIS recognizes it as a __Welcome__ intent it will perform the __Welcome__ function and present himself.
+Whenever our users write a message to our bot and LUIS recognizes it as a __Welcome__ intent, it will perform the __Welcome function__ and present himself.
 
-Everytime LUIS identifies an intent it returns a __LuisResult__ variable containing all the data related to the operation.
+### __LUIS None Intent__
 
+Sometimes LUIS won´t detect an utterance we pass it, for these cases, we have the None intent.
+Add the following code to the dialog:
+```
+[LuisIntent("")]
+public async Task None(IDialogContext context, LuisResult result)
+{
+    await context.PostAsync($"Sorry, I did not understand '{result.Query}'");
+    await context.PostAsync("I can talk about my friends or weekly night plans, what would you like to know?");
+    context.Wait(MessageReceived);
+}
+```
+
+Whenever LUIS doesn´t recognize an intent or classifies it wrong, we can go back to our LUIS service and reassign the utterance intent. 
+
+To do this head, back to the __Intent__ Section, select any intent and go to the __Suggested Utterances__ Section.
+
+![](../../images/mod4_4.png)
+
+Whenever LUIS is used through our bot, all the utterances are going to store themselves in the __Suggested Utterances__ section. This way we can save the correct intents LUIS has detected and __Reassign__ the incorrect ones.
+
+After saving the correct utterances don´t forget to train again your LUIS so it becomes more intelligent.
 
 ### __LUIS Friends Intent__
 
@@ -236,7 +289,9 @@ public async Task Friends(IDialogContext context, LuisResult result)
 }
 ```
 
-The bot is going to execute this function when LUIS detects we are asking about the bot`s friends. If you remember, we also created a Friend entity in case we are asking for information about a specific friend. So let´s find a Friend Entity by adding the following code after the client declaration.
+The bot is going to execute this function when LUIS detects we are asking about the bot`s friends. 
+### __Extracting the Friend Entity__
+If you remember, we also created a Friend entity in case we are asking for information about a specific friend. So let´s find a Friend Entity by adding the following code after the client declaration.
 
 
 ```
@@ -270,91 +325,92 @@ EntityRecommendation friendEntRec;
 ```
 
 For those who completed Module 3 what we do in this function will be familiar to them. If you haven`t done Module 3, what we do in this function is:
-- Search the friend received in our Friends Dictionary.
-- If the friend is found, we return a reply with a Hero Card attachment we created with an extension method for the Character class (You can see this in the Extensions folder of the project).
+- Search the friend received in our __Friends Dictionary__.
+- If the friend is found, we return a reply with a __Hero Card__ attachment we created with an __extension method__ for the __Character__ class (You can see this in the __Extensions__ folder of the project).
 - If the friend is not found we return a reply telling the user the friend isn´t in his list.
 - If we don´t detect any friend entity we inform the user
-- Finally we wait for the users next message with context.Wait(MessageReceived)
+- Finally we wait for the users next message with __context.Wait(MessageReceived)__
 
 ### __Go ahead and ask your bot about his friends!__
 
-Let´s add a new feature to the Friends conversation. To let the user know the available friends of the bot, we are going to reply a carousel of character hero cards whenever we don`t indentify a Friend entity or we don´t find the friend in the dictionary.
+### __Returning the Hero Card Carousel__
+
+Let´s add a new feature to the Friends conversation. To let the user know the available friends of the bot, we are going to reply with a __carousel of Character Hero Cards__ whenever we don`t indentify a Friend entity or we don´t find the friend in the dictionary.
+
+First let`s create a new method in our __BigBangTheoryCient.cs__ to return a list, with all the characters in the dictionary, using __LINQ__.
 
 ```
-        public IEnumerable<Character> GetAllCharacters()
-            => characters.Select(c => c.Value).ToList();
+public IEnumerable<Character> GetAllCharacters()
+    => characters.Select(c => c.Value).ToList();
 ```
 
-
-First let`s create a new extension method in our Character extension class. This method will return us a reply, which contains a carousel of the list of character we pass it.
+Once we have a list of characters we want to transform them into HeroCards and return a __carousel__ containing all the cards. To create the reply with the carousel, add the following method in our __CharacterExtensions.cs__:
 
 ```
-        public static IMessageActivity ToMessage(this IEnumerable<Character> characters, IDialogContext context)
-        {
-            var reply = context.MakeMessage();
-            reply.AttachmentLayout = "carousel";
-            reply.Attachments = characters.Select(c => c.ToAttachment(context)).ToList();
-            return reply;
-        } 
+public static IMessageActivity ToMessage(this IEnumerable<Character> characters, IDialogContext context)
+{
+    var reply = context.MakeMessage();
+    reply.AttachmentLayout = "carousel";
+    reply.Attachments = characters.Select(c => c.ToAttachment(context)).ToList();
+    return reply;
+} 
 ```
 Go back to the LuisDialog and update the friends conversation. 
 ```
 [LuisIntent("Friends")]
-        public async Task Friends(IDialogContext context, LuisResult result)
+public async Task Friends(IDialogContext context, LuisResult result)
+{
+    var client = new BigBangTheoryClient();
+
+    // Did we get a friend name?
+    EntityRecommendation friendEntRec;
+    if (result.TryFindEntity("Friend", out friendEntRec))
+    {
+        // We got a name
+        string friend = friendEntRec.Entity;
+        var character = client.GetCharacter(friend);
+        if (character != null)
         {
-            var client = new BigBangTheoryClient();
-
-            // Did we get a friend name?
-            EntityRecommendation friendEntRec;
-            if (result.TryFindEntity("Friend", out friendEntRec))
-            {
-                // We got a name
-                string friend = friendEntRec.Entity;
-                var character = client.GetCharacter(friend);
-                if (character != null)
-                {
-                    // We know the friend
-                    await context.PostAsync($"This is what I can tell you about {character.Name}");
-                    await context.PostAsync(character.ToMessage(context));
-                }
-                else
-                {
-                    // We don't know the friend
-                    await context.PostAsync($"Sorry, {friend} isn't in my friends list");
-                    var characters = client.GetAllCharacters();
-                    await context.PostAsync(characters.ToMessage(context));
-                }
-            }
-            else
-            {
-                // We weren't provided with any friend name
-                await context.PostAsync($"Here are some of my friends");
-                var characters = client.GetAllCharacters();
-                await context.PostAsync(characters.ToMessage(context));
-            }
-
-            context.Wait(MessageReceived);
+            // We know the friend
+            await context.PostAsync($"This is what I can tell you about {character.Name}");
+            await context.PostAsync(character.ToMessage(context));
         }
+        else
+        {
+            // We don't know the friend
+            await context.PostAsync($"Sorry, {friend} isn't in my friends list");
+            var characters = client.GetAllCharacters();
+            await context.PostAsync(characters.ToMessage(context));
+        }
+    }
+    else
+    {
+        // We weren't provided with any friend name
+        await context.PostAsync($"Here are some of my friends");
+        var characters = client.GetAllCharacters();
+        await context.PostAsync(characters.ToMessage(context));
+    }
+
+    context.Wait(MessageReceived);
+}
 ```
 
 Now ours users will see all the bots friends in a nice way.
 
-### __Go ahead and try your progress!__
+### __Talk with your bot and see your progress!__
 
 ### __LUIS Plans Intent__
 
->__Resume:__ In this section we are going to develop the bots response when a user requests a plan.
-
-In this section our goal is to return the plan recommended for a day like we did in Module 3. The advantage of implementing LUIS is not having to ask the user for a day, instead we are going to extract the datetime prebuilt entity we assigned to this intent and parse it obtain the day of the week the user is referring to.
+>__Resume:__ In this section our goal is to return the plan recommended for a day like we did in Module 3. The advantage of implementing LUIS is not having to ask the user for a day, instead we are going to extract the datetime prebuilt entity we assigned to this intent and parse it obtaining the day of the week the user is referring to.
 
 Create the LUIS intent and corresponding function the same way we did with the other intents.
 
 ```
- [LuisIntent("Plans")]
-        public async Task Plans(IDialogContext context, LuisResult result)
-        {
-            
-        }
+[LuisIntent("Plans")]
+public async Task Plans(IDialogContext context, LuisResult result)
+{
+    
+}
 ```
 
 Datetime entities detect dates or time, so we have to distinguish the result obtained. Add the following code inside the Plans function to retrieve the Entity.
@@ -366,11 +422,89 @@ if (result.TryFindEntity("builtin.datetime.date", out dateEntRec))
 {
     datetime = dateEntRec.Resolution["date"];
 }
+
 else if (result.TryFindEntity("builtin.datetime.time", out dateEntRec))
 {
     datetime = dateEntRec.Resolution["time"];
 }
+
 ```
+To understand a bit better what LUIS returns when a datetime Entity is found here is a table with the different utterances it detects:
+
+![](../../images/mod4_2.png)
+
+### __Obtaining the DayOfWeek__
+
+Right now our datetime variable contains a value like "2017-03-28" or "XXXX-WXX-1" depending on the datetime entity detected. If you remember our __Plans Dictionary__ accepts the name of week days as keys, so we have to parse _datetime_ to a DayOfWeek object in order to retrieve the plan from the dictionary.
+
+To accomplish this, lets create an extension method for the __String__ class, to transform its value into a DayOfWeek object, add the following code:
+
+```
+public static class StringExtensions
+    {
+        public static DayOfWeek GetDayOfWeek(this string datetime)
+        {
+            DayOfWeek? day;
+            DateTimeResolution resolution;
+            if (DateTimeResolution.TryParse(datetime, out resolution))
+            {
+                day = resolution.DayOfWeek;
+                DayOfWeek dayOfWeek;
+                if (day != null)
+                {
+                    dayOfWeek = day.Value;
+                }
+                else
+                {
+                    if (resolution.Year.HasValue && resolution.Month.HasValue && resolution.Day.HasValue)
+                    {
+                        dayOfWeek = new DateTime(resolution.Year.Value, resolution.Month.Value, resolution.Day.Value).DayOfWeek;
+                    }
+                    else
+                    {
+                        dayOfWeek = DateTime.Now.DayOfWeek;
+                    }
+                }
+                return dayOfWeek;
+            }
+            else
+            {
+                return DateTime.Now.DayOfWeek;
+            }
+        }
+    }
+```
+
+Now, every time we parse the datetime variable we`ll get a __DayOfWeek__ object.
+
+### __Returning the plan__
+
+Let´s finish updating the __Plans__ function so our bot returns us the plan. Add the following code after the _if else_ statement.
+
+```
+dayOfWeek = datetime.GetDayOfWeek();
+
+var plan = new BigBangTheoryClient().GetPlan(dayOfWeek.ToString());
+await context.PostAsync($"On a {dayOfWeek} you should {plan} ");
+context.Wait(MessageReceived);
+
+```
+### __Go ahead and ask your bot what to do tomorrow night!__
+
+## That&#39;s the end for Module 4.
+
+Let´s recap a little.
+
+In this module, you have learnt the __basics of LUIS and LuisDialogs__. You can now create bots that:
+
+- Recognize user intentions.
+- Recognize entities in those intentions.
+- Perform a specific task for each intention
+- Return a carousel of HeroCards.
+- Parse datetime string to DayOfWeeks.
+
+Continue to  [Module 5](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-5) to add image recognition cognitive services to your bot!
+
 
 
 

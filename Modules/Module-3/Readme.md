@@ -23,7 +23,7 @@ Normally, when you create a bot, you want it to have some type of interaction wi
 
 </div>
 
-[Dialogs](https://docs.botframework.com/en-us/csharp/builder/sdkreference/dialogs.htmlmodel)
+[Dialogs](https://docs.botframework.com/en-us/csharp/builder/sdkreference/dialogs.html)
  are a conversational process, where the exchange of messages between bot and user is the primary channel for interaction with the outside world. Each dialog is an abstraction that encapsulates its own state in a C# class that implements [IDialog](https://docs.botframework.com/en-us/csharp/builder/sdkreference/dd/d5e/interface_microsoft_1_1_bot_1_1_builder_1_1_dialogs_1_1_i_dialog.html).
 
 Let&#39;s see an example of a Dialog to understand it a bit better. If you have completed  [Module 1](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-1) you can use the solution created, if not, you can use the solution provided in the [Start](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-3/Start) folder of this Module.
@@ -54,6 +54,7 @@ public class MyFirstDialog
 To:
 
 ```
+[Serializable]
 public class MyFirstDialog: IDialog
 {
 
@@ -229,7 +230,7 @@ Next add the dictionary and populate it.
 private Dictionary<string, Character> characters = new Dictionary<string, Character>()
 {
 
- {"leonard", new haracter("Leonard Hofstadter", "Experimental Physicist" ," <<insert information text here>>", "<<insert image internet Url here>>")},
+ {"leonard", new Character("Leonard Hofstadter", "Experimental Physicist" ," <<insert information text here>>", "<<insert image internet Url here>>")},
 
  {"penny", new Character("Penny", "Aspiring Actress" , " <<insert information text here>>" , "<<insert image internet Url here>>")},
 
@@ -409,7 +410,7 @@ Now when we call __BigBangTheoryClient.GetPlan(<< name of day >>)__ it will retu
 
 **Day Selection**
 
-When we have a Character class and a Character client we can go back to MyFirstDialog.cs and update ChoiceSelectedAsync() switch.
+When we have a __Plans Dictionary__ in our client we can go back to MyFirstDialog.cs and update ChoiceSelectedAsync() switch.
 
 Add the following code:
 ```
@@ -462,5 +463,5 @@ In this module, you have learnt the __basics of bot Dialogs__. You can now creat
 - Return normal messages as a reply.
 - Return HeroCards as attachments of messages.
 
-Continue to  [Module 4](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-0) to add intelligence to your bots dialog with LUIS cognitive service!
+Continue to  [Module 4](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-4) to add intelligence to your bots dialog with LUIS cognitive service!
 
