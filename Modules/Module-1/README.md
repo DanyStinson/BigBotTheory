@@ -10,12 +10,12 @@ After that, create a new project, select the Bot Application template. Assign yo
 
 **Note**: Check the "Add to Source Control" option, it will help with you with version control and you will have a repository to work with.
 
-![](../../images/mod1_1.png)
+![](../../images/mod1_1_1.png)
 ## Project structure
 
 Lets have a look a the projects structure to understand how our bot works.
 
-![](../../images/mod1_2.png)
+![](../../images/mod1_1_2.png)
 
 We have: 
 - A series of **properties** and **references** as we have in all our Visual Studio projects. 
@@ -67,7 +67,7 @@ So... You have already seen above how a bot is structured and how it responds to
 
 **Step 1**: Run the Bot Framework project. A browser window will open that will display the default.htm.
 
-![](../../images/mod1_4.png)
+![](../../images/mod1_1_4.png)
 
 **Step 2**: Open the Bot Framework Emulator and enter in the address bar:
 ```sh
@@ -82,7 +82,7 @@ Once connected, the message "POST 200 [conversationUpdate]" will appear on the r
 
 Go ahead, say hello!
 
-![](../../images/mod1_6.png)
+![](../../images/mod1_1_6.png)
  
 Congratulations, you have already created your first bot!
 
