@@ -41,12 +41,11 @@ Log in with a Microsoft account and register a new bot.
 
 ![](../../images/mod2_5.png)
 
-For the Messaging endpoint insert the following link:
-```
-https://yourwebapp/api/messages
-```
+For the Messaging endpoint insert your generated Web App direction like following link:
 
 ![](../../images/mod2_6.png)
+
+>__Note__: Don`t forget to use _https_ and to add _/api/messages_ at the end.
 
 Next we have to generate a new App ID and password for our bot. If you press the link, a new tab will open with our App ID.
 
@@ -81,7 +80,7 @@ Right now, you should have registered your bot and have a homepage like this one
 
 ![](../../images/mod2_11.png)
 
-If you test your connection it wont work, because the bot we published didn´t include the __App__ and __Password__ keys for the bot.
+If you test your connection it won´t work, because the bot we published didn´t include the __App__ and __Password__ keys for the bot.
 
 Go back to your project in Visual Studio and re-publish your new code to Azure.
 
@@ -97,19 +96,20 @@ If you go back to the Bot Framework page and Test your connection again it shoul
 
 ![](../../images/mod2_13.png)
 
-Now we are ready to deploy our bot throught different channels!
+Now we are ready to register our bot in different channels!
 
-## Deploy our bot in a Skype Account
-
-Linking our bot to our Skype account is very easy. If you go to the __Channels__ section in the Bot Framework page, click on the __Add to Skype__ button and it will redirect you to another tab to add your bot to your contact list.
+## Register our bot in Skype
+Bot Framework has already registered our bot in Skype! The only thing you have to do is add it to your contacts. If you go to the __Channels__ section in the Bot Framework page, click on the __Add to Skype__ button and it will redirect you to another tab to add your bot to your contact list.
 
  ![](../../images/mod2_14.png)
 
- When you log into your Skype account your bot will appear and you can talk to it just as you would with another contact.
+ When you log into your Skype account with __[Skype](https://www.skype.com/en)__ or __[Skype Preview for Windows 10](https://www.microsoft.com/en-us/store/p/skype-preview/9wzdncrfj364)__ your bot will be there and you can talk to it just as you would do with another contact.
 
-## Deploy our bot as a Web Chat
+## Embed your bot in websites 
 
-We can also deploy our bot to appear as a web chat in out site. To do this go __Get bot embed codes__ link in the __Channels__ Section, select the Web Chat icon and press the link that will appear.
+Bot Framework also registers our bot in the Web Chat Channel. A Web Chat is a web control that we can embed in any website to talk with our bot.
+
+To obtain the < iframe > go __Get bot embed codes__ link in the __Channels__ Section, select the Web Chat icon and press the link that will appear.
 
 Next insert a simple name to reference your site.
  

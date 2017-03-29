@@ -17,6 +17,11 @@ Microsoft Cognitive Services (formerly Project Oxford) are a set of APIs, SDKs a
 
 In this Hands On Lab, we are going to use the __Computer Vision__ and __Emotion__ API`s.
 
+In order to use these services we have to download it´s correspondants __Nugget Packages__.
+
+Here are the links to [Emotion](https://www.nuget.org/packages/Microsoft.ProjectOxford.Emotion/) and [Vision](https://www.nuget.org/packages/Microsoft.ProjectOxford.Vision/) 
+nuget packages and installation steps.
+
 ### Emotion Service
 
 To use the Emotion Service let´s create a new service class:

@@ -40,9 +40,6 @@ Add a Dialogs folder in your solution where you will store your different types 
 ## Implementing IDialog
 
 As explained before we are going to implement the IDialog interface to use botframework dialogs.
-```
-using Microsoft.Bot.Builder.Dialogs;
-```
 
 Update:
 ```
@@ -60,6 +57,11 @@ public class MyFirstDialog: IDialog
 
 }
 ```
+>__Note__: You might need to include the following line in your namespaces as we are going to be working with Bot Builder Dialogs:
+>```
+>using Microsoft.Bot.Builder.Dialogs;
+>```
+><br>
 
 Simply right click and tap  **Implement Interface** , which will add the following lines of code:
 
@@ -106,7 +108,7 @@ Let´s stop a second and see what we have just added.
 await context.PostAsync("Welcome, I'm Sheldon Bot");
 ```
 
-With this statement, the bot sends a message to the user. In this case, we are retuning a simple string message, but we can add attachments to messages which we´ll see later.
+With this statement, the bot sends a message to the user. In this case, we are returning a simple string message, but we can add attachments to messages which we´ll see later.
 
 ```
  context.Wait(MessageReceivedAsync);

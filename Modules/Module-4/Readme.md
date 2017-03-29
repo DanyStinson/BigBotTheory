@@ -184,7 +184,7 @@ public class MyFirstLuisDialog : LuisDialog<object>
 
 Next, we have to tell our bot the settings of our LUIS endpoint to use the service.
 
-Go to the __Web.config__ file, and add two new keys inside the AppSettings we created in [Module 2](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-2). 
+Go to the __Web.config__ file, and add two new keys inside the AppSettings. 
 
 ```
 <add key="LUISModelID" value="Put your LUIS App ID here"/>
@@ -453,6 +453,7 @@ public static class StringExtensions
         }
     }
 ```
+>__Note:__ To use DateTimeResolution objects, the Bot.Builder package must have version 3.3 or higher. You can check the version by going to the Nuget Packet Manager, search Bot Buider in the Installed Packages searchbar and update it if needed.
 
 Now, every time we parse the datetime variable we`ll get a __DayOfWeek__ object.
 

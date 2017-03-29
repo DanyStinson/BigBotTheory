@@ -7,10 +7,10 @@ namespace BotExample.Model
     {
         private Dictionary<string, Character> characters = new Dictionary<string, Character>()
         {
-            {"leonard", new Character("Leonard Hofstadter", "Experimental Physicist" ,"Leonard is my friend" ,"http://vignette3.wikia.nocookie.net/thebigbangtheory/images/b/bf/250px-Leonard.jpg/revision/latest?cb=20120917154638&path-prefix=es")},
-            {"penny", new Character("Penny", "Aspiring Actress" ,"Penny is my friend" ,"https://upload.wikimedia.org/wikipedia/en/4/41/Penny_bigbangtheory.jpg")},
-            {"raj", new Character("Rajesh Koothrappali", "Particle Astrophysicist" ,"Rajesh is my friend" ,"http://vignette2.wikia.nocookie.net/bigbangtheory/images/9/97/Raj.jpg/revision/20110809180135")},
-            {"howard", new Character("Howard Wolowitz", "Aerospace Engineer" ,"Howard is my friend" ,"http://vignette2.wikia.nocookie.net/bigbangtheory/images/6/6a/Howardwolowitz.jpg/revision/latest/top-crop/width/240/height/240?cb=20100425200930")}
+            {"leonard", new Character("Leonard Hofstadter", "Experimental Physicist" ,"insert information here" ,"insert image url here")},
+            {"penny", new Character("Penny", "Aspiring Actress" ,"insert information here" ,"insert image url here")},
+            {"raj", new Character("Rajesh Koothrappali", "Particle Astrophysicist" ,"insert information here" ,"insert image url here")},
+            {"howard", new Character("Howard Wolowitz", "Aerospace Engineer" ,"insert information here" ,"insert image url here")}
         };
 
         private Dictionary<string, string> plans = new Dictionary<string, string>()
