@@ -482,7 +482,7 @@ Now, every time we parse the datetime variable we`ll get a __DayOfWeek__ object.
 Let´s finish updating the __Plans__ function so our bot returns us the plan. Add the following code after the _if else_ statement.
 
 ```
-dayOfWeek = datetime.GetDayOfWeek();
+var dayOfWeek = datetime.GetDayOfWeek();
 
 var plan = new BigBangTheoryClient().GetPlan(dayOfWeek.ToString());
 await context.PostAsync($"On a {dayOfWeek} you should {plan} ");

@@ -13,7 +13,7 @@ namespace BotExample.Services
         private static readonly string ApiKey = ConfigurationManager.AppSettings["EmotionAPIKey"];
         private EmotionServiceClient client = new EmotionServiceClient(ApiKey);
 
-        private static Dictionary<string, string> adjetives = new Dictionary<string, string>()
+        private static Dictionary<string, string> adjectives = new Dictionary<string, string>()
         {
             { "Anger", "angry" },
             { "Contempt", "contemptuous" },
@@ -30,7 +30,7 @@ namespace BotExample.Services
             var stream = await new HttpService().GetStreamAsync(uri);
             var result = await client.RecognizeAsync(stream);
 
-            var emotions = result.Select(e => adjetives[e.Scores.ToRankedList().First().Key]);
+            var emotions = result.Select(e => adjectives[e.Scores.ToRankedList().First().Key]);
 
             var count = emotions.Count();
             switch (count)

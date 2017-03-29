@@ -23,7 +23,7 @@ namespace BotExample.Dialogs
         public async Task Welcome(IDialogContext context, LuisResult result)
         {
             await context.PostAsync($"Hi, I'm SheldonBot");
-            await context.PostAsync("I can talk about my friends, weekly night plans, recognize pictures or emotions, what would you like to know about?");
+            await context.PostAsync("I can talk about my friends, weekly night plans, recognize pictures or emotions, what would you like me to?");
             context.Wait(MessageReceived);
         }
 
@@ -139,7 +139,7 @@ namespace BotExample.Dialogs
         public async Task None(IDialogContext context, LuisResult result)
         {
             await context.PostAsync($"Sorry, I did not understand '{result.Query}'");
-            await context.PostAsync("I can talk about my friends, weekly night plans, recognize pictures or emotions, what would you like to know about?");
+            await context.PostAsync("I can talk about my friends, weekly night plans, recognize pictures or emotions, what would you like me to?");
             context.Wait(MessageReceived);
         }
     }
