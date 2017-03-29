@@ -50,6 +50,7 @@ Now you have an __endpoint key__ you can create your first LUIS app in the __My 
 ![](../../images/luis3.png)
 
 If everyhing has gone right, this is your app dashboard you should be seeing right now.
+>__Note:__ The _App Id_ next to __Dashboard__ will be your __LUIS ID__. 
 
 ![](../../images/luis4.png)
 
@@ -183,11 +184,11 @@ public class MyFirstLuisDialog : LuisDialog<object>
 
 Next, we have to tell our bot the settings of our LUIS endpoint to use the service.
 
-Go to the __Web.Release.config__ file, and add two new keys inside the AppSettings we created in [Module 2](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-2). 
+Go to the __Web.config__ file, and add two new keys inside the AppSettings we created in [Module 2](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-2). 
 
 ```
-<add key="LUISModelID" value="Put your LUIS App ID here" xdt:Transform="SetAttributes" xdt:Locator="Match(key)" />
-<add key="LUISSubscriptionKey" value="Put your LUIS key here" xdt:Transform="SetAttributes" xdt:Locator="Match(key)" />
+<add key="LUISModelID" value="Put your LUIS App ID here"/>
+<add key="LUISSubscriptionKey" value="Put your LUIS key here" />
 ``` 
 
 Now when a user writes a message to the bot, we want it to jump into our LUIS dialog, so go ahead and update the code in the __MessagesController.cs__ inside the __Controllers__ folder.
@@ -204,47 +205,17 @@ if (activity.Type == ActivityTypes.Message)
             }
 ```
 
-
-### __LUIS Intents__
-So, we have linked our LUIS app to our LUIS Dialog, but how do we tell our bot __what to do__ when LUIS reconizes an intention?
-
-Very easy, just add the following code for each intent you added to your LUIS service:
-
-```
-[LuisIntent("<< insert name of your intent >>")]
-```
-and under it, the function you want to execute:
-```
-public async Task HelloWorldAsync (IDialogContext context, LuisResult result)
-{
-    await context.PostAsync($"Hello World");
-    context.Wait(MessageReceived);
-}
-```
-Everytime LUIS identifies an intent it returns a __LuisResult__ variable containing all the data related to the intention.
-
-### __Extracting LUIS Entities__ 
-
-To extract an __Entity__ we must first check if the requested Entity is found in the utterance and dump it into an __EntityRecommendation__ variable. 
-
-```
-EntityRecommendation entRec;
-if (result.TryFindEntity("<<name of Luis Entity>>", out entRec))
-    {
-        // We found an Entity in the utterance
-        string entityvaluevar = entRec.Entity;
-    }
-```
-
 ### __LUIS Welcome Intent__
 
-Now we know the basics of LUIS, we can define what our bot should do everytime it detects someone is saying "Hello" or something similar to it.
+So, we have linked our LUIS app to our LUIS Dialog, but how do we tell our bot __what to do__ when LUIS reconizes an intention?
 
-Add the following lines to __MyFirstLuisDialog.cs__:
+We can define what our bot should do everytime it detects someone is saying "Hello" or something similar to it by adding the following lines to __MyFirstLuisDialog.cs__:
 
 ```
+//We define our LUIS entity
 [LuisIntent("Welcome")]
-public async Task Welcome(IDialogContext context, LuisResult result)
+// We define the function we want to execute
+public async Task WelcomeAsync(IDialogContext context, LuisResult result)
 {
     await context.PostAsync($"Hi, I'm SheldonBot");
     await context.PostAsync("I can talk about my friends or weekly night plans, what would you like to know?");
@@ -253,13 +224,17 @@ public async Task Welcome(IDialogContext context, LuisResult result)
 ```
 Whenever our users write a message to our bot and LUIS recognizes it as a __Welcome__ intent, it will perform the __Welcome function__ and present himself.
 
+Everytime LUIS identifies an intent it returns a __LuisResult__ variable containing all the data related to the intention.
+
+>__Note:__ __MessageReceived__ is a function already included in LuisDialog that we use to wait for the users message. This function receives the users message and passes it to the LUIS service to indentify possible intents.
+
 ### __LUIS None Intent__
 
 Sometimes LUIS won´t detect an utterance we pass it, for these cases, we have the None intent.
 Add the following code to the dialog:
 ```
 [LuisIntent("")]
-public async Task None(IDialogContext context, LuisResult result)
+public async Task NoneAsync(IDialogContext context, LuisResult result)
 {
     await context.PostAsync($"Sorry, I did not understand '{result.Query}'");
     await context.PostAsync("I can talk about my friends or weekly night plans, what would you like to know?");
@@ -283,7 +258,7 @@ Let´s start the friends conversation by adding a new LUIS intent inside our dia
 
 ```
 [LuisIntent("Friends")]
-public async Task Friends(IDialogContext context, LuisResult result)
+public async Task FriendsAsync(IDialogContext context, LuisResult result)
 {
     var client = new BigBangTheoryClient();
 }
@@ -291,7 +266,11 @@ public async Task Friends(IDialogContext context, LuisResult result)
 
 The bot is going to execute this function when LUIS detects we are asking about the bot`s friends. 
 ### __Extracting the Friend Entity__
-If you remember, we also created a Friend entity in case we are asking for information about a specific friend. So let´s find a Friend Entity by adding the following code after the client declaration.
+If you remember, we also created a Friend entity in case we are asking for information about a specific friend. 
+
+To extract an __Entity__ we must first check if the requested Entity is found in the utterance and dump it into an __EntityRecommendation__ variable. 
+
+So let´s find a Friend Entity by adding the following code after the client declaration.
 
 
 ```
@@ -407,7 +386,7 @@ Create the LUIS intent and corresponding function the same way we did with the o
 
 ```
 [LuisIntent("Plans")]
-public async Task Plans(IDialogContext context, LuisResult result)
+public async Task PlansAsync(IDialogContext context, LuisResult result)
 {
     
 }
