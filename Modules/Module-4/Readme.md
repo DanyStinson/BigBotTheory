@@ -474,7 +474,7 @@ context.Wait(MessageReceived);
 
 Let´s recap a little.
 
-In this module, you have learnt the __basics of LUIS and LuisDialogs__. You can now create bots that:
+In this module, you have learned the __basics of LUIS and LuisDialogs__. You can now create bots that:
 
 - Recognize user intentions.
 - Recognize entities in those intentions.

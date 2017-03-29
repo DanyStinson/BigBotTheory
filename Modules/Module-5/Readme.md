@@ -311,7 +311,13 @@ Let´s add some LUIS intents to let the bot know what the user wants to do!
 
 ### Adding LUIS 
 
->__Note:__ Before we include our LUIS Intent functions you have to create them in your LUIS service like we did in [Module 4](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-4) and train it.
+Before we include our LUIS Intent functions you have to create them in your LUIS service like we did in [Module 4](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-4) and train it. Here are some examples of utterances for each intent.
+
+![](../../images/mod5_4.png)
+![](../../images/mod5_3.png)
+
+
+
 
 #### __Recognize Emotion__
 Add the following code to __MyFirstLuisDialog.cs__ to let the bot know the user wants to recognize the emotions in an image:
@@ -346,7 +352,7 @@ await context.PostAsync("I can talk about my friends, weekly night plans, recogn
 
 Let´s recap a little.
 
-In this module, you have learnt the __basics of Microsoft Vision APIs__. You can now create bots that:
+In this module, you have learned the __basics of Microsoft Vision APIs__. You can now create bots that:
 
 - Receive attachments.
 - Describe the contents of an image.

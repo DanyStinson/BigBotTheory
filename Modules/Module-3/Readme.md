@@ -455,7 +455,7 @@ private async Task ReturnPlanAsync(IDialogContext context, IAwaitable<string> ar
 
 Let´s recap a little.
 
-In this module, you have learnt the __basics of bot Dialogs__. You can now create bots that:
+In this module, you have learned the __basics of bot Dialogs__. You can now create bots that:
 
 - Display a welcome message.
 - Prompt a series of options for a user to select.
