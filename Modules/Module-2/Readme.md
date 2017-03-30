@@ -35,7 +35,7 @@ Click on create and publish your Web App!!
 
 ## Register our bot in Bot Framework
 
-Now that we have our bot up and running in the cloud, we can register it at [Bot Framework](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-1).
+Now that we have our bot up and running in the cloud, we can register it at [Bot Framework](https://dev.botframework.com/).
 
 Log in with a Microsoft account and register a new bot.
 

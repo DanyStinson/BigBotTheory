@@ -66,7 +66,7 @@ public class MyFirstDialog: IDialog
 Simply right click and tap  **Implement Interface** , which will add the following lines of code:
 
 ```
-public Task StartAsync(IDialogContext context)
+public async Task StartAsync(IDialogContext context)
 {
     throw new NotImplementedException();
 }
