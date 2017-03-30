@@ -27,6 +27,6 @@ namespace BotExample.Model
             => characters.ContainsKey(name.ToLower()) ? characters[name.ToLower()] : null;
 
         public string GetPlan(string dayOfWeek)
-            => plans[dayOfWeek.ToLower()];
+            => plans.ContainsKey(dayOfWeek.ToLower()) ? plans[dayOfWeek.ToLower()] : null;
     }
 }

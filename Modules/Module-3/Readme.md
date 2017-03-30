@@ -355,7 +355,7 @@ private Dictionary<string, string> plans = new Dictionary<string, string>()
 };
 
 public string GetPlan(string dayOfWeek)
-    => plans[dayOfWeek.ToLower()];
+    => plans.ContainsKey(dayOfWeek.ToLower()) ? plans[dayOfWeek.ToLower()] : null;
 ```
 
 Now when we call __BigBangTheoryClient.GetPlan(<< name of day >>)__ it will return the plan for the day required.
