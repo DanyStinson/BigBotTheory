@@ -33,6 +33,7 @@ namespace BotExample.Extensions
             {
                 Title = character.Name,
                 Subtitle = character.Profession,
+                Text = character.Information,
                 Images = new List<CardImage>()
                 {
                     new CardImage()

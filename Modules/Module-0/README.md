@@ -31,5 +31,12 @@ After doing this you should be able to create a new **Bot Application** project.
 #### Bot Framework Channel Emulator
 Before we upload our Bot to the Cloud we should do some previous testing. For this, we have the  [Bot Framework Channel Emulator](https://docs.botframework.com/en-us/tools/bot-framework-emulator/). Download the emulator and install it in your computer. Later on I will guide you on how to use it.
 
-**Once you have completed downloading and installing this three prerequisites you are ready to begin!**
+#### Azure Account
+In this lab we will use Azure to publish our bot online.
+You can get your free account [here](https://azure.microsoft.com/en-us/offers/ms-azr-0044p/) to get started.
+
+If you are a student you can get a [Microsoft Imagine](https://azure.microsoft.com/en-us/pricing/member-offers/imagine/) account.
+
+
+**Once you have completed downloading and installing these prerequisites you are ready to begin!**
 **Enjoy!**

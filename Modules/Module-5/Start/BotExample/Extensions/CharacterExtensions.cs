@@ -24,13 +24,9 @@ namespace BotExample.Extensions
                 Images = new List<CardImage>()
 
                 {
-
                     new CardImage()
-
                     {
-
                         Url = character.Imageurl
-
                     }
                 }
             };

@@ -130,14 +130,13 @@ Inside __MessageReceivedAsync__ add the following line and create the __ShowOpti
 ```
 private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
 {
-            ShowOptions(context);
+    ShowOptions(context);
 }
 
 private void ShowOptions(IDialogContext context)
 {
     var choices = new[] {"My Friends", "Tonight's Plan"};
     PromptDialog.Choice(context, ChoiceSelectedAsync, choices,"What do you want me to talk to you about?","Please select a valid option");
-
 }
 ```
 What we do with __PromptDialog.Choice__ is display a series of predefined choices for the user to pick what he wants to do, and send the selected choice to another function to process. We must define a message to display for the prompt, and another message in case the user decides to ask for an option that isn&#39;t in the list of choices.
@@ -149,25 +148,20 @@ More information and types of Prompts in the following [link](https://docs.botfr
 Let&#39;s create our ChoiceSelectedAsync function to process the user&#39;s choice. The argument parameter is the choice sent to this function so we await it and assign it to a variable named choice.
 ```
 private async Task ChoiceSelectedAsync(IDialogContext context, IAwaitable<string> argument)
-
-        {
-            var choice = await argument;
-
-            switch (choice)
-            {
-                case "My Friends":
-                    break;
-
-                case "Tonight's Plan":
-                    break;
-
-                default:
-                    ShowOptions(context);
-                    break;
-            }
-        }
+{
+    var choice = await argument;
+    switch (choice)
+    {
+        case "My Friends":
+            break;
+        case "Tonight's Plan":
+            break;
+        default:
+            ShowOptions(context);
+            break;
+    }
+}
 ```
-
 ## Creating the Friends conversation
 
 Before we create the friend&#39;s conversation we should create a __Character__ class.
@@ -185,34 +179,27 @@ Go ahead and create a new Model folder in our folder and create the __Character.
 Update the code:
 ```
 [Serializable]
+public class Character
+{
+    public Character() { }
 
-    public class Character
-
+    public Character(string name, string profession, string information, string imageurl)
     {
-        public Character() { }
-
-        public Character(string name, string profession, string information, string imageurl)
-
-        {
-            Name = name;
-
-            Profession = profession;
-
-            Information = information;
-
-            Imageurl = imageurl;
-
-        }
-
-        public string Name { get; set; }
-
-        public string Profession { get; set; }
-
-        public string Information { get; set; }
-
-        public string Imageurl { get; set; }
-
+        Name = name;
+        Profession = profession;
+        Information = information;
+        Imageurl = imageurl;
     }
+
+    public string Name { get; set; }
+
+    public string Profession { get; set; }
+
+    public string Information { get; set; }
+
+    public string Imageurl { get; set; }
+
+}
 ```
 
 ### **Character Database Client**
@@ -231,15 +218,10 @@ Next add the dictionary and populate it.
 ```
 private Dictionary<string, Character> characters = new Dictionary<string, Character>()
 {
-
  {"leonard", new Character("Leonard Hofstadter", "Experimental Physicist" ," <<insert information text here>>", "<<insert image internet Url here>>")},
-
  {"penny", new Character("Penny", "Aspiring Actress" , " <<insert information text here>>" , "<<insert image internet Url here>>")},
-
  {"raj", new Character("Rajesh Koothrappali", "Particle Astrophysicist" , " <<insert information text here>>" , "<<insert image internet Url here>>")},
-
  {"howard", new Character("Howard Wolowitz", "Aerospace Engineer" , " <<insert information text here>>", "<<insert image internet Url here>>")}
-
 };
 ```
 >__Note:__ You can always add more characters if you want, this is just a small demonstration on how to create the dictionary.
@@ -247,8 +229,7 @@ private Dictionary<string, Character> characters = new Dictionary<string, Charac
 Once created the dictionary, we need a method to retrieve the wanted Character object from the dictionary. Add the following code after the dictionary:
 ```
 public Character GetCharacter(string name)
-
-            => characters.ContainsKey(name.ToLower()) ? characters[name.ToLower()] : null;
+    => characters.ContainsKey(name.ToLower()) ? characters[name.ToLower()] : null;
 ```
 Now when we call __BigBangTheoryClient.GetCharacter(<< name of character >>)__ it will return __Character__ if it&#39;s found in the dictionary and __null__ if it fails to find it.
 
@@ -259,37 +240,27 @@ When we have a __Character class__ and a __Character client__ we can go back to 
 Add the following code:
 ```
 case "My Friends":
-
   var choices = new[] { "Leonard", "Penny", "Howard", "Raj" };
-
   PromptDialog.Choice(context, FriendSelectedAsync, choices, "Who do you want to know about?", "Please select a valid option");
-
   break;
 ```
 Now the user can select a friend to get information from. Go ahead and create the __FriendSelectedAsync__ method to give the user some information about the character selected.
 ```
 private async Task FriendSelectedAsync(IDialogContext context, IAwaitable<string> argument)
+{
+    var choice = await argument;
+    var character = new BigBangTheoryClient().GetCharacter(choice);
+    if (character != null)
+    {
+        await context.PostAsync($"{choice}`s profession is {character.Profession}.");
+    }
+    else
+    {
+        await context.PostAsync($"Sorry, {choice} isn't in my friends list");
+    }
 
-        {
-            var choice = await argument;
-
-            var character = new BigBangTheoryClient().GetCharacter(choice);
-
-            if (character != null)
-
-            {
-                await context.PostAsync($"{choice}`s profession is {character.Profession}.");
-            }
-
-            else
-
-            {
-                await context.PostAsync($"Sorry, {choice} isn't in my friends list");
-            }
-
-            ShowOptions(context);
-
-        }
+    ShowOptions(context);
+}
 ```
 
 Go ahead and try out your bot with the __Bot Framework Emulator__! 
@@ -323,44 +294,33 @@ Create a new __Extensions folder__ and create a ***static*** __CharacterExtensio
 
 public static Attachment ToAttachment(this Character character, IDialogContext context)
 {
-            HeroCard hc = new HeroCard()
-
+    HeroCard hc = new HeroCard()
+    {
+        Title = character.Name,
+        Subtitle = character.Profession,
+        Text = character.Information,
+        Images = new List<CardImage>()
+        {
+            new CardImage()
             {
-                Title = character.Name,
+                Url = character.Imageurl
+            }
+        }
+    };
 
-                Subtitle = character.Profession,
-
-                Text = character.Information,
-
-                Images = new List<CardImage>()
-
-                {
-
-                    new CardImage()
-
-                    {
-
-                        Url = character.Imageurl
-
-                    }
-                }
-            };
-
-            return hc.ToAttachment();
+    return hc.ToAttachment();
 }
 
 
 public static IMessageActivity ToMessage(this Character character, IDialogContext context)
 {
-            var reply = context.MakeMessage();
-            
-            reply.Attachments = new List<Attachment>
+    var reply = context.MakeMessage();
+    reply.Attachments = new List<Attachment>
+    {
+        character.ToAttachment(context)
+    };
 
-            {
-                character.ToAttachment(context)
-            };
-
-            return reply;
+    return reply;
 }
 ```
 
@@ -376,8 +336,6 @@ await context.PostAsync(character.ToMessage(context));
 ```
 ### __Try your bot and see the results!__
 
-<br>
-
 ## Creating the Plans conversation
 
 For this part of the bot`s conversation we won&#39;t need to create a Plan model, as we will only return a string.
@@ -386,26 +344,18 @@ What we do need, is to simulate the database client as we did in the friend&#39;
 
 ```
 private Dictionary<string, string> plans = new Dictionary<string, string>()
-        {
-
-            { "monday", "get a Thai takeout!" },
-
-            { "tuesday", "have a cheeseburger at the Cheesecake Factory!" },
-
-            { "wednesday", "play Halo with your friends!" },
-
-            { "thursday", "have a nice slice of pizza!" },
-
-            { "friday", "get a chinese takeaway!" },
-
-            { "saturday", "do some of your laundry!" },
-
-            { "sunday", "relax at home and do some physics!" }
-
-        };
+{
+    { "monday", "get a Thai takeout!" },
+    { "tuesday", "have a cheeseburger at the Cheesecake Factory!" },
+    { "wednesday", "play Halo with your friends!" },
+    { "thursday", "have a nice slice of pizza!" },
+    { "friday", "get a chinese takeaway!" },
+    { "saturday", "do some of your laundry!" },
+    { "sunday", "relax at home and do some physics!" }
+};
 
 public string GetPlan(string dayOfWeek)
-           => plans[dayOfWeek.ToLower()];
+    => plans[dayOfWeek.ToLower()];
 ```
 
 Now when we call __BigBangTheoryClient.GetPlan(<< name of day >>)__ it will return the plan for the day required.
@@ -417,9 +367,7 @@ When we have a __Plans Dictionary__ in our client we can go back to MyFirstDialo
 Add the following code:
 ```
 case "Tonight's Plan":
-
 PromptDialog.Text(context, ReturnPlanAsync, "What day of the week is today?", "Please enter the name of the day", 3);
-
 break;
 ```
 In this case, we don´t display a series of options to the user. Instead, we ask the user to send the bot the day.
@@ -427,28 +375,20 @@ In this case, we don´t display a series of options to the user. Instead, we ask
 Create the __ReturnPlanAsync__ function to return a plan for the day required by the user.
 ```
 private async Task ReturnPlanAsync(IDialogContext context, IAwaitable<string> argument)
+{
+    var choice = await argument;
+    var plan = new BigBangTheoryClient().GetPlan(choice);
+    if (plan != null)
+    {
+        await context.PostAsync($"If today is {choice} you should {plan}");
+    }
+    else
+    {
+        await context.PostAsync($"Sorry, {choice} isn't a day of my week");
+    }
 
-        {
-
-            var choice = await argument;
-
-            var plan = new BigBangTheoryClient().GetPlan(choice);
-
-            if (plan != null)
-
-            {
-                await context.PostAsync($"If today is {choice} you should {plan}");
-            }
-
-            else
-
-            {
-                await context.PostAsync($"Sorry, {choice} isn't a day of my week");
-            }
-
-            ShowOptions(context);
-
-        }
+    ShowOptions(context);
+}
 ```
 
 ### __Go ahead and ask your bot what to do today!__

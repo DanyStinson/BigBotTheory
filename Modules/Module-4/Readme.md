@@ -40,17 +40,18 @@ Go to the LUIS web page and create a new account using your Microsoft account.
 
 >__Note:__ It might take a while to create your account.
 
-LUIS API needs an __endpoint key__. Go to “My Keys” Section and add a new Key, you can use your __programmatic key__ for this lab.
+LUIS API needs an __endpoint key__. Go to “My Keys” Section and add a new Key, you can use your __programmatic key__ for this lab. 
 
 ![](../../images/luis2.png)
 
+>__IMPORTANT:__ This will be your LUIS key.
 
 Now you have an __endpoint key__ you can create your first LUIS app in the __My Apps__ Section.
 
 ![](../../images/luis3.png)
 
 If everyhing has gone right, this is your app dashboard you should be seeing right now.
->__Note:__ The _App Id_ next to __Dashboard__ will be your __LUIS ID__. 
+>__IMPORTANT:__ The _App Id_ next to __Dashboard__ will be your __LUIS ID__. 
 
 ![](../../images/luis4.png)
 
@@ -204,6 +205,10 @@ if (activity.Type == ActivityTypes.Message)
                 await Conversation.SendAsync(activity, () => new MyFirstLuisDialog(service));
             }
 ```
+>__Note__: Make sure you are use the System.Configuration namespace.
+>```
+> using System.Configuration;
+>```
 
 ### __LUIS Welcome Intent__
 
@@ -416,7 +421,7 @@ To understand a bit better what LUIS returns when a datetime Entity is found her
 
 Right now our datetime variable contains a value like "2017-03-28" or "XXXX-WXX-1" depending on the datetime entity detected. If you remember our __Plans Dictionary__ accepts the name of week days as keys, so we have to parse _datetime_ to a DayOfWeek object in order to retrieve the plan from the dictionary.
 
-To accomplish this, lets create an extension method for the __String__ class, to transform its value into a DayOfWeek object, add the following code:
+To accomplish this, first create a __StringExtensions.cs__ file inside the __Extensions__ folder. We are going create an extension method for the __String__ class, to transform its value into a DayOfWeek object, so add the following code to the new class:
 
 ```
 public static class StringExtensions
