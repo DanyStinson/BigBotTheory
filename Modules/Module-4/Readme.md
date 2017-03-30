@@ -141,6 +141,8 @@ Go to the __Test & Train__ Section and press the __Train Application__ button to
 
 You also have a __Testing Panel__ in this section where you can enter utterances and see what your bot is capable of understanding. If the bot doesn`t detect an intent right you can go back to the Intents Section, add the new utterance in the correct Intent and train it again.
 
+>__Note:__ If we want to save all the utterances we insert in this testing panel we need to enable the published mode (once we publish our bot). After enabling this option we can go back to any intent and go to the __Suggested Utterances__ section to save or reasign the inserted utterances.
+
 ### __LUIS Publishing__
 
 When you finish building and testing your app, you can publish your it as webservice and get an HTTP endpoint that can be integrated in any backend code.
