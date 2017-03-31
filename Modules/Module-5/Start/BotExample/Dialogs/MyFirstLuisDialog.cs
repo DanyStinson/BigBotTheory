@@ -74,6 +74,12 @@ namespace BotExample.Dialogs
             {
                 datetime = dateEntRec.Resolution["time"];
             }
+
+            var dayOfWeek = datetime.GetDayOfWeek();
+
+            var plan = new BigBangTheoryClient().GetPlan(dayOfWeek.ToString());
+            await context.PostAsync($"On a {dayOfWeek} you should {plan} ");
+            context.Wait(MessageReceived);
         }
 
     }

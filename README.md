@@ -17,7 +17,7 @@ The lab has been divided in modules that cover up different areas of __Bot Frame
 - [Module 2](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-2): Publish your bot in Azure, register it in Bot Framework and connect it to different channels.
 - [Module 3](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-3): Add dialogs to your bot.
 - [Module 4](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-4): Add intelligence to your dialogs with LUIS.
-- [Module 5](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-5) Add Cognitive Services to your bot so it can describe pictures and recognize emotions. 
+- [Module 5](https://github.com/DanyStinson/BigBotTheory/tree/master/Modules/Module-5): Add Cognitive Services to your bot so it can describe pictures and recognize emotions. 
 
 It is recommended you do start the lab from the beginning as we will add new features to the initial bot in each module.
 

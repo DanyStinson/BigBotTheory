@@ -34,7 +34,7 @@ __Language Understanding Intelligent Service (LUIS)__ is a Microsoft Cognitive S
 
 Let me explain to you how LUIS works as we create the service for our Bot.
 ## Create a LUIS service for our bot
-Go to the LUIS web page and create a new account using your Microsoft account.
+Go to the [LUIS website](https://www.luis.ai/) and create a new account using a Microsoft account.
 
 ![](../../images/luis1.png)
 
@@ -145,7 +145,7 @@ You also have a __Testing Panel__ in this section where you can enter utterances
 
 ### __LUIS Publishing__
 
-When you finish building and testing your app, you can publish your it as webservice and get an HTTP endpoint that can be integrated in any backend code.
+When you finish building and testing your app, you can publish it as webservice and get an HTTP endpoint that can be integrated in any backend code.
 
 Go to the __Publish App__ Section, select your __Programmatic Key__ as _endpoint key_ and press the __Publish__ button.
 

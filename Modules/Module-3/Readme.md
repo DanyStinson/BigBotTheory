@@ -116,7 +116,7 @@ With this statement, the bot sends a message to the user. In this case, we are r
 
 After sending a message to the user we normally wait for an answer (as we would do in real life).
 
-With the __context.Wait()__ method what we do is, wait for the users answer and send it to another function along with the context. Let´s call this new function __MessageReceivedAsync__ .
+With the __context.Wait()__ method what we do is wait for the users answer and send it to another function along with the context. Let´s call this new function __MessageReceivedAsync__ .
 
 ```
 private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
@@ -124,7 +124,7 @@ private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<objec
 }
 ```
 
-As want to show the user an options menu once he has talked to the bot we don&#39;t really need his response for anything, so lets redirect this function to a __ShowOptions__ function to which we are going to pass our context.
+As we want to show the user an options menu once he has talked to the bot, we don&#39;t really need his response for anything, so lets redirect this function to a __ShowOptions__ function to which we are going to pass our context.
 
 Inside __MessageReceivedAsync__ add the following line and create the __ShowOptions__ function.
 ```
@@ -324,7 +324,7 @@ public static IMessageActivity ToMessage(this Character character, IDialogContex
 }
 ```
 
-Now our __Character__ class has a new method that will return a reply with a __HeroCard__ containing all the characters information.
+Now our __Character__ class has a new method that will return a reply with a __HeroCard__ containing all the character´s information.
 
 Let´s go back to our __FriendSelectedAsync__ method in our dialog and update:
 ```
