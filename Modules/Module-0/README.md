@@ -13,7 +13,7 @@ Both Visual Studio Community Edition are **Free**.
 
 #### Bot Framework Template
 To create our first bot we will use a template that Bot Framework provides to make things easier for us. 
-You can download the [BotApplication.zip](https://download.botframework.com/bf-v3/builder/vstemplate/Bot%20Application.zip) from the official website or you can use the one I have uploaded in this repository directory.
+You can download the __BotApplication.zip__ I have uploaded to this module.
 
 **How do I install my Bot Template?**
 Easy peasy. Once you have downloaded the .zip file, just paste it in the Visual Studio project templates directory.
